@@ -34,7 +34,7 @@
                     <img slot="icon" src="" width="24" height="24">
                 </mt-cell>
                 <mt-cell title="推广中心" is-link to="/">
-                    <span>&nbsp;</span>
+                    <span>未开通</span>
                     <img slot="icon" src="" width="24" height="24">
                 </mt-cell>
                 <mt-cell title="我的问答" is-link to="/">
