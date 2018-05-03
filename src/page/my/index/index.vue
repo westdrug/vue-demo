@@ -33,8 +33,8 @@
                     <span>&nbsp;</span>
                     <img slot="icon" src="" width="24" height="24">
                 </mt-cell>
-                <mt-cell title="推广中心" is-link to="/">
-                    <span>未开通</span>
+                <mt-cell title="推广中心" is-link to="/my">
+                    <span class="fs12" :class="openFlag ? 'c-danger' : 'c-999'">{{openFlag ? '已开通' : '未开通'}}</span>
                     <img slot="icon" src="" width="24" height="24">
                 </mt-cell>
                 <mt-cell title="我的问答" is-link to="/">
@@ -63,7 +63,7 @@
     export default {
     	data(){
             return{
-
+                openFlag: false
             }
         },
         mounted() {
