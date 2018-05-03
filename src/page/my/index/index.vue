@@ -3,8 +3,11 @@
         <div class="main main-foot">
             <section class="u-index-head">
                 <div class="facebook-card">
-                    <router-link to="/my">
+                    <router-link to="/my/userInfo">
                         <div class="clearfix">
+                            <aside class="pull-right pr" style="margin-top: 1rem;">
+                                <i class="mint-cell-allow-right"></i>
+                            </aside>
                             <div class="facebook-avatar mr5">
                                 <img :src="userInfo.entity.avatar" width="76" height="76" :alt="userInfo.entity.nickname || userInfo.entity.email">
                             </div>
@@ -33,7 +36,7 @@
                     <span>&nbsp;</span>
                     <img slot="icon" src="" width="24" height="24">
                 </mt-cell>
-                <mt-cell title="推广中心" is-link to="/my">
+                <mt-cell title="推广中心" is-link :to="openFlag ? '/extendIndex' : '/my'">
                     <span class="fs12" :class="openFlag ? 'c-danger' : 'c-999'">{{openFlag ? '已开通' : '未开通'}}</span>
                     <img slot="icon" src="" width="24" height="24">
                 </mt-cell>
@@ -52,22 +55,28 @@
             </section>
         </div>
         <foot-top></foot-top>
+        <transition name="router-slid" mode="out-in">
+            <router-view></router-view>
+        </transition>
     </div>
 </template>
 
 <script>
-    import { mapState } from 'vuex'
-    import { Cell } from 'mint-ui'
+    import { mapState, mapMutations } from 'vuex'
+    import { Cell, Toast } from 'mint-ui'
     import footTop from '@/components/footer/footer'
+    import { checkAgentState } from '@/service/getData'
 
     export default {
     	data(){
             return{
-                openFlag: false
+                openFlag: false,       //是否开通推广状态
+                userid: 0              //用户id
             }
         },
         mounted() {
-    		console.log(this.userInfo)
+            this.userid = this.userInfo.entity.id
+            this.initData()
         },
         components: {
             Cell,
@@ -79,6 +88,25 @@
             ])
         },
         methods: {
+            ...mapMutations([
+            	'USER_EXTEND_STATE'
+            ]),
+            //初始化数据
+    		async initData() {
+                //推广员状态校验
+                await checkAgentState(this.userid).then(res => {
+                    if(res.success) {
+                        res.entity.isContinue ? this.openFlag = true : this.openFlag = false
+                        this.USER_EXTEND_STATE(res)
+                    } else {
+                        Toast({
+                            message: res.message,
+                            position: 'middle',
+                            duration: 5000
+                        })
+                    }
+                })
+            }
 
         }
     }
@@ -100,7 +128,7 @@
             }
         }
         .facebook-name {
-            font-size: .9rem;
+            font-size: .8rem;
             color: #fff;
             text-indent: .5rem;
             padding-top: .2rem;
@@ -121,5 +149,11 @@
             min-height: 58px;
         }
     }
-
+    .router-slid-enter-active, .router-slid-leave-active {
+        transition: all .4s;
+    }
+    .router-slid-enter, .router-slid-leave-active {
+        transform: translate3d(2rem, 0, 0);
+        opacity: 0;
+    }
 </style>

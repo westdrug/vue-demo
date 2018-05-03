@@ -12,6 +12,10 @@ const info = r => require.ensure([], () => r(require('@/page/course-info/course-
 const login = r => require.ensure([], () => r(require('@/page/login/login')), 'login')
 //我的
 const my = r => require.ensure([], () => r(require('@/page/my/index/index')), 'my')
+//个人资料
+const userInfo = r => require.ensure([], () => r(require('@/page/my/index/children/userInfo')), 'userInfo')
+//推广中心首页
+const extendIndex = r => require.ensure([], () => r(require('@/page/my/extendCenter/index/index')), 'extend')
 
 export default [{
     path: '/',
@@ -65,7 +69,25 @@ export default [{
                 title: '我的',
                 requireAuth: true             //状态 - 路由进入登录拦截
             },
-            component: my
+            component: my,
+            children: [
+                //个人资料
+                {
+                    path: 'userInfo',
+                    meta: {
+                        title: '个人资料'
+                    },
+                    component: userInfo
+                }
+            ]
+        },
+        //推广中心首页
+        {
+            path: 'extendIndex',
+            meta: {
+                title: '推广中心'
+            },
+            component: extendIndex
         },
         //404
         {

@@ -1,7 +1,8 @@
 import {
   RECODE_USERINFO,
   GET_USERINFO,
-  OUT_LOGIN
+  OUT_LOGIN,
+  USER_EXTEND_STATE
 } from './mutation-type'
 
 export default {
@@ -34,5 +35,10 @@ export default {
     [OUT_LOGIN](state) {
         state.userInfo = null
         state.login = false
+    },
+    //推广员状态
+    [USER_EXTEND_STATE](state, info) {
+        state.userExtendInfo = info
+        state.isExtender = info.entity.isContinue
     }
 }

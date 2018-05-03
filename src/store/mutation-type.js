@@ -1,3 +1,4 @@
 export const RECODE_USERINFO = 'RECODE_USERINFO'
 export const GET_USERINFO = 'GET_USERINFO'
 export const OUT_LOGIN = 'OUT_LOGIN'
+export const USER_EXTEND_STATE = 'USER_EXTEND_STATE'

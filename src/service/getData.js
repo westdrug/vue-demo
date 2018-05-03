@@ -78,3 +78,9 @@ export const getCourseComment = (courseid, currentPage, catalogid) => fetch(`${C
     'page.currentPage': currentPage,
     catalogId: catalogid
 }, 'POST')
+/**
+ * 推广员状态校验
+ */
+export const checkAgentState = (userid) => fetch(`${AGENT_HOST}/api/agent/user/checkAgentUser`, {
+    userId: userid
+}, 'POST')
