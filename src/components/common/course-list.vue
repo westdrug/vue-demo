@@ -43,12 +43,6 @@
                 showLoading: true,                              //加载动画
                 totalPage: 1,                                   //总页码
                 currentPage: 1,                                 //当前页码
-                priceOrderBy: 0,                                //价格升降序 1，3
-                updateTimeOrderBy: 0,                           //时间升降序 2，4
-                courseName: '',                                 //课程名称
-                subjectId: 0,                                   //专业 ID
-                year: '',                                       //年份
-                courseTypeKey: '',                              //课程类型
                 form: 2,                                        //来源
                 hasRefresh: false,                              //加载状态显示
                 hasMore: false,                                 //加载动画
@@ -63,11 +57,14 @@
             unData,
             loadData
         },
+        props: ['priceOrderBy','updateTimeOrderBy','courseName','subjectId','year','courseTypeKey'],
         mixins: [scrollLoad],
         methods: {
     		async initData() {
                 await getAllCourse(this.currentPage, this.priceOrderBy, this.updateTimeOrderBy, this.courseName, this.subjectId, this.year, this.courseTypeKey, this.form).then(res => {
-                    this.courseList = [...this.courseList, ...res.entity.data]
+                    if(res.entity.data) {
+                        this.courseList = [...this.courseList, ...res.entity.data]
+                    }
                     this.totalPage = res.entity.page.totalPages
                     this.showLoading = false
                 }).then(() => {
@@ -96,6 +93,14 @@
                     return
                 }
 
+            }
+        },
+        watch: {
+    		//兼听父组件传来 subjectId，当值发生变化时重新获取课程数据，用于分类筛选
+            subjectId: function (value) {
+                console.log('id', value)
+                this.courseList.length = 0
+                this.initData()
             }
         }
     }

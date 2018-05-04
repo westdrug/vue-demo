@@ -41,12 +41,20 @@
                         <div class="c-divScroll__wrap">
                             <section class="content-padded pr5 pl5">
                                 <div v-if="catalogList.length">
-                                    <dl v-for="item in catalogList" :key="item.id">
-                                        <dt><p class="hLh30"><span class="fs14 c-333">{{item.catalogName}}</span></p></dt>
-                                        <dd v-if="item.subCatalogList.length">
-                                            <section v-for="item in item.subCatalogList" :key="item.id">
-                                                <p class="hLh30"><span class="fs12 c-666">{{item.catalogName}}</span></p>
-                                            </section>
+                                    <dl v-for="(item, index) in catalogList" :key="item.id">
+                                        <dt><p class="hLh30"><strong class="fs14 c-333">{{index+1}}、{{item.course.courseName}}</strong></p></dt>
+                                        <dd class="content-padded" v-if="item.course.catalogList">
+                                            <dl v-for="sub in item.course.catalogList" :key="sub.id">
+                                                <dt><p class="hLh30"><span class="fs14 c-333">{{sub.catalogName}}</span></p></dt>
+                                                <dd class="content-padded" v-if="sub.subCatalogList">
+                                                    <section v-for="child in sub.subCatalogList" :key="child.id">
+                                                        <p class="hLh30"><span class="fs12 c-666">{{child.catalogName}}</span></p>
+                                                    </section>
+                                                </dd>
+                                            </dl>
+                                        </dd>
+                                        <dd v-else>
+                                            <p class="tac hLh30"><span class="fs12 c-666">无章节</span></p>
                                         </dd>
                                     </dl>
 
@@ -129,7 +137,7 @@
                 tipText1: '暂无目录，小编正在整理上传中...',   //缺省提示
                 tipText2: '亲，暂无反馈...',                  //缺省提示
                 userId: 0,                                  //用户id
-                courseId: 17,                                //课程id
+                courseId: 0,                                //课程id
                 orderNo: '',                                //课程订单号
                 coursePic: '',                              //封面图片
                 courseDetail: {                             //课程详情
@@ -148,7 +156,7 @@
              }
         },
         created() {
-    	    //this.courseId = parseInt(this.$route.params.courseId)
+    	    this.courseId = parseInt(this.$route.params.courseId)
             this.orderNo = this.$route.params.orderNo ? this.$route.params.orderNo : ''
         },
         mounted() {
@@ -178,7 +186,9 @@
                 }).then(() => {
                     //目录
                     getCourseMenu(this.courseId).then(res => {
-                        this.catalogList = [...res.entity[0].course.catalogList]
+                    	if(res.entity) {
+                            this.catalogList = [...res.entity]
+                        }
                     }).then(() => {
                         //反馈
                         this.getCourseCommentFn()

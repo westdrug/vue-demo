@@ -44,6 +44,10 @@ export const getUserInfo = (userid) => fetch(`${USER_HOST}/api/user/center/getUs
     userId: userid
 }, 'POST')
 /**
+ * 专业科目
+ */
+export const subjectItem = () => fetch(`${CLASSIFY_HOST}/api/sys/subject/list`, {}, 'POST')
+/**
  * 课程列表
  */
 export const getAllCourse = (currentPage, priceOrderBy, updateTimeOrderBy, courseName, subjectId, year, courseTypeKey, form) => fetch(`${COURSE_HOST}/api/course/getAllCourseList`, {

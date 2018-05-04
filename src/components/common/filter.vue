@@ -13,24 +13,47 @@
                     <mt-tab-container-item id="tab-container1">
                         <section class="tab-left-nav">
                             <ul>
-                                <li data-subject="1" class="active">滑雪</li>
-                                <li data-subject="4" class="">法学</li>
-                                <li data-subject="16" class="">会计</li>
-                                <li data-subject="33" class="">一级建造师</li>
-                                <li data-subject="44" class="">二级建造师</li>
-                                <li data-subject="71" class="">区块链</li>
-                                <li data-subject="75" class="">经济学</li>
-                                <li data-subject="112" class="">法律</li>
-                                <li data-subject="123" class="">语言</li>
-                                <li data-subject="177" class="">哲学</li>
+                                <li @click="selectSubjectFn(0, 0)" :class="{active: currParent === 0}">全部</li>
+                                <li v-for="(item, index) in majorArr" :key="item.id" :class="{active: currParent === index+1}" @click="selectSubjectFn(item.id, index+1)">{{item.subjectName}}</li>
                             </ul>
                         </section>
                         <section class="tab-right-menu">
-                            aaa
+                            <div v-if="subjectArr.length || currSubjectArr.length">
+                                <div v-show="majorId === 0">
+                                    <div class="content-padded subject-list__wrap">
+                                        <mt-button plain size="small" :type="currChild === 0 ? 'primary' : 'default'" @click="selectChildFn(0, 0)">全部</mt-button>
+                                        <mt-button plain size="small" :type="currChild === index+1 ? 'primary' : 'default'" v-for="(item, index) in subjectArr" :key="item.id" @click="selectChildFn(item.id, index+1)">{{item.subjectName}}</mt-button>
+                                    </div>
+                                </div>
+                                <div v-show="majorId !== 0">
+                                    <div class="content-padded subject-list__wrap">
+                                        <mt-button plain size="small" :type="currChild === index ? 'primary' : 'default'" v-for="(item, index) in currSubjectArr" :key="item.id" @click="selectChildFn(item.id, index)">{{item.subjectName}}</mt-button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <un-data :num="3" :tipText="tipText"></un-data>
+                            </div>
                         </section>
                     </mt-tab-container-item>
                     <mt-tab-container-item id="tab-container2">
-                        22222
+                        <section class="content-padded">
+                            <!--<ul>
+                                <li v-for="item in options" :key="item.key">
+                                    <mt-checklist
+                                        align="right"
+                                        :value.sync="item.value"
+                                        :options="item.option"
+                                        @change="changeFn">
+                                    </mt-checklist>
+                                </li>
+                            </ul>-->
+                            <mt-checklist
+                                v-model="currSortVal"
+                                align="right"
+                                :options="options" @change="changeFn">
+                            </mt-checklist>
+                        </section>
                     </mt-tab-container-item>
                     <mt-tab-container-item id="tab-container3">
                         33333
@@ -43,22 +66,96 @@
 </template>
 
 <script>
-    import { Navbar, TabItem } from 'mint-ui'
+    import unData from './un-data'
+    import { Navbar, TabItem, Button, Checklist, Toast } from 'mint-ui'
+    import { subjectItem } from '@/service/getData'
     export default {
     	data(){
             return{
-                selected: "",               //选项切换选中
-                filterOpen: false           //点击打开选项内容
+                tipText: '此专业下暂无科目',            //缺省提示文字
+                selected: "",                         //选项切换选中
+                filterOpen: false,                    //点击打开选项内容
+                majorArr: null,                       //全部专业科目
+                subjectArr: [],                       //全部子科目
+                currSubjectArr: [],                   //当前专业下子科目
+                majorId: 0,                           //专业ID
+                currParent: 0,                        //当前专业
+                currChild: 0,                         //当前科目
+                currSortVal: ['0'],                      //
+                options: [
+                    {
+                        label: '按默认排序',
+                        value: '0'
+                    },
+                    {
+                        label: '按上架时间排序',
+                        value: '1'
+                    },
+                    {
+                        label: '按价格排序',
+                        value: '2'
+                    }
+                ]
             }
         },
-        component: {
+        mounted() {
+    	    this.initData()
+        },
+        components: {
             Navbar,
-            TabItem
+            TabItem,
+            Button,
+            Checklist,
+            unData,
+            Toast
         },
         methods: {
+    		//专业科目
+            async initData() {
+            	await subjectItem().then(res => {
+                    if(res.success) {
+                    	if(res.entity) {
+                    		this.majorArr = [...res.entity]
+
+                            this.majorArr.forEach(item => {
+                                item.childSubjectList.forEach(item => {
+                                    this.subjectArr.push(item)
+                                })
+                            })
+                        }
+                    } else {
+                        Toast({
+                            message: res.message,
+                            position: 'middle',
+                            duration: 5000
+                        })
+                    }
+                })
+            },
+            //关闭筛选下拉
             hideFilterFn() {
             	this.selected = ''
             	this.filterOpen = false
+            },
+            //选择分类左侧专业后，右侧渲染对应子科目
+            selectSubjectFn(id, index) {
+            	this.majorId = id
+                this.currParent = index
+                this.currSubjectArr.length = 0
+
+                this.subjectArr.forEach(item => {
+                	if(item.parentId === id) this.currSubjectArr.push(item)
+                })
+            },
+            //选择分类右侧科目后
+            selectChildFn(id, index) {
+            	this.$emit('subjectEvent', id)   //子组件向父组件传值
+                this.currChild = index
+                this.hideFilterFn()
+            },
+            //选择排序
+            changeFn() {
+            	console.log('....', this.currSortVal)
             }
         },
         watch: {
@@ -189,5 +286,11 @@
     .tab-right-menu {
         background-color: #fff;
         width: 77%;
+    }
+    .subject-list__wrap .mint-button {
+        margin: .5rem .2rem 0;
+    }
+    .subject-list__wrap .mint-button--default {
+        border-color: #f2f2f2;
     }
 </style>
