@@ -23,6 +23,7 @@ Vue.config.productionTip = false;
 
 /* 引入全部 Mint ui */
 Vue.use(MintUI, {
+    //懒加载
     lazyload: {
         preLoad: 1.3,
         error: errorPic,

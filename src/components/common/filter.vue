@@ -70,7 +70,7 @@
     import { Navbar, TabItem, Button, Checklist, Toast } from 'mint-ui'
     import { subjectItem } from '@/service/getData'
     export default {
-    	data(){
+    	data() {
             return{
                 tipText: '此专业下暂无科目',            //缺省提示文字
                 selected: "",                         //选项切换选中
@@ -163,6 +163,7 @@
             	let body = document.querySelector('body')
             	if(value === 'tab-container1' || value === 'tab-container2' || value === 'tab-container3') {
                     this.filterOpen = true
+                    window.scrollTo(0, 0)
                     body.setAttribute('class', 'hidden')
                 } else {
             		this.filterOpen = false

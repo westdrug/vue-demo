@@ -98,7 +98,7 @@
         watch: {
     		//兼听父组件传来 subjectId，当值发生变化时重新获取课程数据，用于分类筛选
             subjectId: function (value) {
-                console.log('id', value)
+                //console.log('id', value)
                 this.courseList.length = 0
                 this.initData()
             }
