@@ -26,6 +26,7 @@
           <label class="mint-button-text" v-else>登录/注册</label>
         </button>
       </router-link>
+        <slot name="edit"></slot>
     </div>
   </header>
 

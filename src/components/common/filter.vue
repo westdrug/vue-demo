@@ -118,9 +118,11 @@
                     		this.majorArr = [...res.entity]
 
                             this.majorArr.forEach(item => {
-                                item.childSubjectList.forEach(item => {
-                                    this.subjectArr.push(item)
-                                })
+                            	if(item.childSubjectList) {
+                                    item.childSubjectList.forEach(item => {
+                                        this.subjectArr.push(item)
+                                    })
+                                }
                             })
                         }
                     } else {

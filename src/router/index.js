@@ -14,6 +14,8 @@ const login = r => require.ensure([], () => r(require('@/page/login/login')), 'l
 const my = r => require.ensure([], () => r(require('@/page/my/index/index')), 'my')
 //个人资料
 const userInfo = r => require.ensure([], () => r(require('@/page/my/index/children/userInfo')), 'userInfo')
+//修改姓名
+const setNiceName = r => require.ensure([], () => r(require('@/page/my/index/children/children/setNiceName')), 'setNiceName')
 //推广中心首页
 const extendIndex = r => require.ensure([], () => r(require('@/page/my/extendCenter/index/index')), 'extend')
 
@@ -77,7 +79,15 @@ export default [{
                     meta: {
                         title: '个人资料'
                     },
-                    component: userInfo
+                    component: userInfo,
+                    children: [
+                        //修改名称
+                        {
+                            path: 'setNiceName',
+                            meta: { title: '修改姓名' },
+                            component:  setNiceName
+                        }
+                    ]
                 }
             ]
         },
