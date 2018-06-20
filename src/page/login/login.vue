@@ -1,17 +1,17 @@
 <template>
     <div class="login__wrap">
-      <head-top head-title="登录" goBack="true">
+      <head-top :head-title="$t('m.login')" goBack="true">
 
       </head-top>
       <section class="paddingTop">
         <section class="card">
           <form class="loginForm">
             <section class="input_container">
-              <input type="text" placeholder="账号" v-model.lazy.trim="userAccount">
+              <input type="text" :placeholder="$t('m.account')" v-model.lazy.trim="userAccount">
             </section>
             <section class="input_container">
-              <input v-if="!showPassword" type="password" placeholder="密码"  v-model.trim="passWord">
-              <input v-else type="text" placeholder="密码"  v-model.lazy.trim="passWord">
+              <input v-if="!showPassword" type="password" :placeholder="$t('m.passWord')"  v-model.trim="passWord">
+              <input v-else type="text" :placeholder="$t('m.passWord')"  v-model.lazy.trim="passWord">
               <div class="button_switch" :class="{change_to_text: showPassword}">
                 <div class="circel_button" :class="{trans_to_right: showPassword}" @click="changePassWordType"></div>
                 <span>abc</span>
@@ -20,7 +20,7 @@
             </section>
           </form>
           <p class="login_tips">&nbsp;</p>
-          <mt-button type="primary" size="large" @click="loginSubmit">登录</mt-button>
+          <mt-button type="primary" size="large" @click="loginSubmit">{{$t('m.login')}}</mt-button>
         </section>
       </section>
     </div>
@@ -29,7 +29,7 @@
 <script>
     import headTop from '@/components/header/header'
     import { Button, Toast } from 'mint-ui'
-    import { isEmpty } from '@/config/wUtils'
+    import { isEmpty, setStore } from '@/config/wUtils'
     import { mapState, mapMutations } from 'vuex'
     import { accountLogin } from '@/service/getData'
     export default {
@@ -50,7 +50,7 @@
             	  'RECODE_USERINFO'
             ]),
 
-        	  //是否显示密码
+        	//是否显示密码
             changePassWordType() {
                 this.showPassword = !this.showPassword
             },
@@ -86,8 +86,9 @@
                   return
               } else {
                   this.RECODE_USERINFO(this.userInfo)
+                  setStore('userInfo', this.userInfo)
                   //登录成功后重定向到前路由
-                  let redirect = decodeURIComponent(this.$route.query.redirect || '/');
+                  let redirect = decodeURIComponent(this.$route.query.redirect || '/')
                   this.$router.replace({
                       path: redirect
                   })

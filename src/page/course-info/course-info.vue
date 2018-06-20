@@ -129,7 +129,7 @@
     import unData from '@/components/common/un-data'
     import loadData from '@/components/common/load-data'
     import { Navbar, TabContainer, TabContainerItem, Button } from 'mint-ui'
-    import { scrollLoad } from '@/components/common/mixin'
+    import { scrollLoad, scrollLoadMoreFn } from '@/components/common/mixin'
     export default {
     	data(){
             return{
@@ -206,25 +206,7 @@
                 })
             },
             async scrollLoadMore() {
-                //防止重复请求
-    			if(this.preventRepeatReuqest) return
-
-                this.preventRepeatReuqest = true
-                this.hasRefresh = true
-
-                if(this.currentPage === this.totalPage) {
-    				this.hasMore = false
-                    return
-                }
-
-                this.currentPage++
-                if(this.currentPage <= this.totalPage) {
-    				this.hasMore = true
-                    this.getCourseCommentFn()
-                } else {
-    				this.hasMore = false
-                    return
-                }
+                scrollLoadMoreFn(this, this.getCourseCommentFn)
             },
             navBarFn(id) {
                 this.active = id

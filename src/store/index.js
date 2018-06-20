@@ -11,6 +11,8 @@ const state = {
     login: false,              //是否登录
     userExtendInfo: null,      //推广员信息
     isExtender: false,         //是否推广员
+    classDetail: null,         //班级详情
+    classTopicDetail: null,    //话题详情
 }
 
 export default new Vuex.Store({

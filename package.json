@@ -7,12 +7,16 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "analyz": "set NODE_ENV=production && set npm_config_report=true && npm run build"
   },
   "dependencies": {
     "fastclick": "^1.0.6",
     "mint-ui": "^2.2.13",
+    "qrcodejs2": "0.0.2",
+    "qs": "^6.5.2",
     "vue": "^2.5.2",
+    "vue-i18n": "^7.8.0",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },
@@ -28,6 +32,7 @@
     "babel-preset-stage-2": "^6.22.0",
     "bable-loader": "0.0.1-security",
     "chalk": "^2.0.1",
+    "compression-webpack-plugin": "^1.1.11",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.0",
     "extract-text-webpack-plugin": "^3.0.0",

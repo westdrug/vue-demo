@@ -56,7 +56,35 @@
                         </section>
                     </mt-tab-container-item>
                     <mt-tab-container-item id="tab-container3">
-                        33333
+                        <section class="tab-container-bt__wrap">
+                            <div class="filter-three__wrap">
+                                <section class="content-padded">
+                                    <div class="content-padded">
+                                        <h6 class="hLh30"><span class="fs12 c-999">按类型</span></h6>
+                                        <section class="subject-list__wrap">
+                                            <mt-button plain size="small" :type="currChild3 === 0 ? 'primary' : 'default'" @click="selectTypeFn('', 0)">全部</mt-button>
+                                            <mt-button v-for="(item, index) in cTypeArr" :key="index" plain size="small" :type="currChild3 === index + 1 ? 'primary' : 'default'" @click="selectTypeFn(item, index+1)">{{item}}</mt-button>
+                                        </section>
+                                    </div>
+                                    <div class="content-padded">
+                                        <h6 class="hLh30"><span class="fs12 c-999">按年份</span></h6>
+                                        <section class="subject-list__wrap">
+                                            <mt-button plain size="small" :type="currChild2 === 0 ? 'primary' : 'default'" @click="selectYearFn('', 0)">全部</mt-button>
+                                            <mt-button v-for="(item, index) in yearFn()" :key="index" plain size="small" :type="currChild2 === index + 1 ? 'primary' : 'default'" @click="selectYearFn(item, index+1)">{{item}}</mt-button>
+                                        </section>
+                                    </div>
+                                </section>
+                                <footer class="filter-three-foot">
+                                    <section @click="resetBtnFn">
+                                        <span class="fs14 c-999">重置</span>
+                                    </section>
+                                    <section @click="submitBtnFn">
+                                        <span class="fs14 c-master">确定</span>
+                                    </section>
+                                </footer>
+                            </div>
+
+                        </section>
                     </mt-tab-container-item>
                 </mt-tab-container>
             </div>
@@ -95,7 +123,12 @@
                         label: '按价格排序',
                         value: '2'
                     }
-                ]
+                ],
+                cTypeArr: ['视频课', '直播课', '专栏课', '套餐课', '文章课'],
+                currChild2: 0,
+                currChild3: 0,
+                cType: '',
+                cYear: '',                       //子传父数据'
             }
         },
         mounted() {
@@ -158,6 +191,69 @@
             //选择排序
             changeFn() {
             	console.log('....', this.currSortVal)
+            },
+            //选择类型
+            selectTypeFn(val, index) {
+                if(typeof val === 'string') {
+                	let sType = ''
+                	switch(val) {
+                        case '视频课':
+                        	sType = 'VIDEO'
+                            break;
+                        case '直播课':
+                            sType = 'LIVE'
+                            break;
+                        case '专栏课':
+                            sType = 'COLUMNS'
+                            break;
+                        case '套餐课':
+                            sType = 'PACKAGE'
+                            break;
+                        case '文章课':
+                            sType = 'ARTICLE'
+                            break;
+                        case '全部':
+                        	sType = ''
+                            break;
+                    }
+                    this.cType = sType
+                }
+
+                this.currChild3 = index
+            },
+            //生成年份 - 当前年份 向前减 4年，向后加 4年
+            yearFn() {
+                let date = new Date(),
+                    next = date.getFullYear() - 4,
+                    last = date.getFullYear() + 4,
+                    yearArr = []
+
+                for(let i = next; i <= last; i++) {
+                	yearArr.push(i.toString())
+                }
+
+                return yearArr
+            },
+            //选择年份
+            selectYearFn(val, index) {
+            	if(typeof val === 'string') this.cYear = val
+                this.currChild2 = index
+            },
+            //提交筛选选项
+            submitBtnFn() {
+            	this.$emit('cTypeEvent', this.cType)
+                this.$emit('cYearEvent', this.cYear)
+                this.hideFilterFn()
+            },
+            //重置筛选选项
+            resetBtnFn() {
+                this.currChild2 = 0
+                this.currChild3 = 0
+                this.cType = ''
+                this.cYear = ''
+                this.$emit('cTypeEvent', this.cType)
+                this.$emit('cYearEvent', this.cYear)
+                this.hideFilterFn()
             }
         },
         watch: {
@@ -167,11 +263,16 @@
                     this.filterOpen = true
                     window.scrollTo(0, 0)
                     body.setAttribute('class', 'hidden')
+                    this.cType = ''
+                    this.cYear = ''
                 } else {
             		this.filterOpen = false
                     body.setAttribute('class', '')
                 }
             }
+        },
+        beforeDestory() {          //实例销毁之前调用
+            document.querySelector('body').setAttribute('class', '')
         }
     }
 
@@ -251,7 +352,8 @@
         visibility: visible;
     }
     .tab-left-nav,
-    .tab-right-menu {
+    .tab-right-menu,
+    .tab-container-bt__wrap {
         float: left;
         height: 100%;
         overflow-x: hidden;
@@ -289,6 +391,36 @@
     .tab-right-menu {
         background-color: #fff;
         width: 77%;
+    }
+    .tab-container-bt__wrap {
+        float: inherit;
+        width: 100%;
+    }
+    .filter-three__wrap {
+        width: 100%;
+        height: 100%;
+        padding-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+        .filter-three-foot {
+            position: absolute;
+            @include wh(100%, 40px);
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #f2f2f2;
+            flex-wrap: nowrap;
+            display: flex;
+            align-self: center;
+            section {
+                height: 40px;
+                width: 100%;
+                display: block;
+                cursor: pointer;
+                flex: 1;
+                text-align: center;
+            }
+        }
     }
     .subject-list__wrap .mint-button {
         margin: .5rem .2rem 0;

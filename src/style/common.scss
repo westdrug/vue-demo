@@ -44,6 +44,7 @@ input[type="button"], input[type="submit"], input[type="search"], input[type="re
 }
 
 textarea { -webkit-appearance: none;}
+img {font-size: .4rem;}
 
 html,body{
   height: 100%;
@@ -103,6 +104,7 @@ html,body{
 
 .content-padded {margin: .4rem}
 .hLh30 {height: 1.18rem;line-height: 1.18rem}
+.pt5 {padding-top: .5rem}
 .pr5 {padding-right: .5rem}
 .pl5 {padding-left: .5rem}
 .mint-header-title {font-size: .7rem}
@@ -130,6 +132,11 @@ body.hidden {overflow: hidden}
 }
 .main-head.main {bottom: 0;}
 .main-foot.main {top: 0;}
+.mainChild-fixed {
+    position: relative;
+    margin-top: 2rem;
+    height: calc(100% - 2rem);
+}
 .card {
   background: #fff;
   box-shadow: 0 0 0.8rem rgba(0,0,0,.02);
@@ -207,4 +214,20 @@ body.hidden {overflow: hidden}
             height: 100%;
         }
     }
+}
+.top-search__wrap {
+    position: relative;
+    height: 40px;
+    .mint-search {
+        height: 32px;
+        margin-top: 8px;
+        .mint-searchbar {
+            background-color: #f2f2f2;
+            padding: 2px 2px;
+        }
+    }
+}
+.mint-indicator {
+    position: relative;
+    z-index: 9999;
 }

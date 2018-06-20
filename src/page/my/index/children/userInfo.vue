@@ -5,18 +5,18 @@
             <div class="content-padded">
                 <section class="page-infinite__wrap">
                     <mt-cell title="头像">
-                        <span><img :src="userInfo.entity.avatar" :alt="userInfo.entity.nickname || userInfo.entity.email" width="30" height="30"></span>
+                        <span><img :src="avatar" :alt="name" width="30" height="30"></span>
                     </mt-cell>
                     <div class="hLh30"></div>
                     <mt-cell title="昵称" is-link to="/">
-                        <span>{{userInfo.entity.nickname || userInfo.entity.email}}</span>
+                        <span>{{name}}</span>
                     </mt-cell>
                     <mt-cell title="密码" is-link to="/">
                         <span>******</span>
                     </mt-cell>
                     <div class="hLh30"></div>
                     <mt-cell title="姓名" is-link to="/my/userInfo/setNiceName">
-                        <span>{{userInfo.entity.realName}}</span>
+                        <span>{{realName}}</span>
                     </mt-cell>
                     <mt-cell title="性别">
                         <span>
@@ -28,14 +28,14 @@
                         </span>
                     </mt-cell>
                     <mt-cell title="手机号" is-link to="/">
-                        <span>{{userInfo.entity.mobile}}</span>
+                        <span>{{mobile}}</span>
                     </mt-cell>
                     <mt-cell title="邮箱" is-link to="/">
-                        <span>{{userInfo.entity.email}}</span>
+                        <span>{{email}}</span>
                     </mt-cell>
                     <div class="hLh30"></div>
                     <mt-cell title="个性签名" is-link to="/">
-                        <span style="font-size: 12px;">{{userInfo.entity.userInfo}}</span>
+                        <span style="font-size: 12px;">{{sign}}</span>
                     </mt-cell><div class="hLh30"></div>
                     <mt-cell title="学业信息" is-link to="/">
                        <span></span>
@@ -56,10 +56,17 @@
     export default {
     	data(){
             return{
+                avatar: '',
+                name: '',
+                realName: '',
+                mobile: '暂无绑定手机号',
+                email: '',
+                sign: '',
                 selected: 0
             }
         },
         mounted() {
+    		this.initData()
         },
         components: {
             headTop,
@@ -71,10 +78,35 @@
             	'userInfo'
             ])
         },
+        methods: {
+    	    initData() {
+    	    	let entity = this.userInfo.entity
+    	    	if(this.userInfo && entity.id) {
+    	    		this.avatar = entity.avatar
+                    this.name = entity.nicename || entity.loginAccount
+                    this.realName = entity.realName
+                    this.mobile = entity.mobile || '暂无绑定手机号'
+                    this.email = entity.email
+                    this.sign = entity.userInfo
+                }
+            }
+        },
         watch: {
-            selected: function (val) {
+            // 深度 watcher
+            userInfo: {
+                handler: function (value) {
+                    //console.log('1111',value)
+                    this.$nextTick(function () {
+                        if(value && value.entity.id) {
+                            this.realName = value.entity.realName
+                        }
+                    })
+                },
+                deep: true
+            },
+            selected: function (value) {
                 this.$nextTick(function () {
-                    console.log('val:',val)
+                    console.log('val:',value)
                 })
             }
         }

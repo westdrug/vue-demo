@@ -9,15 +9,24 @@
               <mt-swipe-item v-for="item in bannerList" :key="item.id"><img :src="item.imageMap.url" :alt="item.depict"></mt-swipe-item>
             </mt-swipe>
           </section>
-          <section style="height: 200px;">
-            <div>
-              <span @click="openMessage($event)">
-                <mt-button data="primary" type="primary">primary</mt-button>
-              </span>
-            </div>
-            <input v-model="message" placeholder="edit me">
-            <p>Message is: {{ message }}</p>
+          <section class="content-padded">
+              <input v-model="message" placeholder="edit me">
+              <p>国际化切换：Message is: {{ message }}</p>
+              <div class="pt5">
+                  <span @click="openMessage($event)">
+                    <mt-button data="primary" type="primary">{{btnTxt}}</mt-button>
+                  </span>
+              </div>
           </section>
+            <section class="content-padded">
+                <p class="hLh30"><span class="fs14 c-master">{{$t('m.myMember')}}</span></p>
+                <p class="hLh30"><span class="fs14 c-master">{{$t('m.myOrder')}}</span></p>
+                <p class="hLh30"><span class="fs14 c-master">{{$t('m.myExam')}}</span></p>
+                <p class="hLh30"><span class="fs14 c-master">{{$t('m.extendCenter')}}</span></p>
+                <p class="hLh30"><span class="fs14 c-master">{{$t('m.myQuestion')}}</span></p>
+                <p class="hLh30"><span class="fs14 c-master">{{$t('m.myTopic')}}</span></p>
+                <p class="hLh30"><span class="fs14 c-master">{{$t('m.myMember')}}</span></p>
+            </section>
         </div>
         <foot-top></foot-top>
         <transition name="loading">
@@ -37,7 +46,6 @@
     import footTop from '@/components/footer/footer'
     import loading from '@/components/common/loading'
     import { bannerIndex, searchCourse } from '@/service/getData'
-    import { imgBaseUrl } from '@/config/env'
 
     export default {
     	data() {
@@ -45,7 +53,8 @@
                 showLoading: true,      //显示加载动画
                 message: '',
                 bannerList: [],
-                imgBaseUrl
+                btnTxt: '切换英文',
+                lang: 'zh-CN'           //默认语言
             }
       },
       mounted() {       //  生命周期钩子  新创建的 vm.$el 并挂载到实例上去之后调用该钩子
@@ -83,8 +92,19 @@
             console.log(index)
           },
           openMessage(event) {
-              console.log(event.target.getAttribute('data'))
-              MessageBox('提示', '操作成功')
+              //console.log(event.target.getAttribute('data'))
+              MessageBox.confirm('确定要切换语言吗?').then(action => {
+                  console.log(action)
+                  if(action === 'confirm' && this.lang === 'zh-CN') {
+                      this.btnTxt = '切换中文'
+                  	  this.lang = 'en-US'
+                      this.$i18n.locale = this.lang     //修改全局属性
+                  } else {
+                      this.btnTxt = '切换英文'
+                      this.lang = 'zh-CN'
+                      this.$i18n.locale = this.lang     //修改全局属性
+                  }
+              })
           },
           reload() {
             window.location.reload()

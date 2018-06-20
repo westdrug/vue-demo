@@ -6,14 +6,20 @@
  * ps:     fetch 是一个实验中的功能，此功能某些浏览器尚在开发中
 */
 
-import {baseUrl} from './env'
+import { baseUrl, imgBaseUrl } from './env'
 import md5 from './md5'
-import {objKeySort} from './wUtils'
+import { objKeySort } from './wUtils'
 import Qs from 'qs'
 
-export default async (url = '', data = {}, type = 'GET', method = 'fetch')=> {
+export default async (url = '', data = {}, type = 'GET', isReq = 'isReq', method = 'fetch')=> {
     type = type.toUpperCase();
-    url = baseUrl + url;
+    url = isReq === 'isReq' ? baseUrl + url : imgBaseUrl + url;
+
+    /*if(isReq !== 'isReq') {
+        let formdata = new FormData()
+        formdata.append('file', {uri: data.filePath, type: 'application/octet-stream', name: 'image.jpg'})
+        console.log('999',formdata)
+    }*/
 
     /*
      * 请求接口 传参验证
@@ -55,13 +61,11 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch')=> {
     }
 
     if (window.fetch && method == 'fetch') {
+      let headerObj = isReq === 'isReq' ? {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'} : {'Content-Type': 'multipart/form-data;charset=utf-8'}
       let requestConfig = {
           credentials: 'include',  //cookie既可以同域发送，也可以跨域发送   发送cookie 时 需设置，解决方案： https://segmentfault.com/q/1010000008636959/a-1020000008640047
           method: type,
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
+          headers: headerObj,
           mode: "core",      //实现跨域   默认是 same-origin , no-core ,core
           cache: "force-cache"
       }

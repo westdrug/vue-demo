@@ -12,6 +12,8 @@ const ORDER_HOST = 'orderApi'       //订单
 
 const CLASSIFY_HOST = 'sysApi'      //专业
 
+const CLASS_HOST = 'classApi'       //班级
+
 const AGENT_HOST = 'agentApi'       //分销
 
 const OP_HOST = 'opApi'            //广告\消息\优惠券\礼品卡
@@ -29,20 +31,6 @@ export const bannerIndex = () => fetch(`${OP_HOST}/api/advert/ajax/advertList`, 
 export const courseMenu = (courseid) => fetch(`${COURSE_HOST}/api/course/getCourseCatalogByCourseId`, {
     courseId: courseid
 }, 'POST');
-
-/**
- * 用户登录
- */
-export const accountLogin = (account, userPassword) => fetch(`${USER_HOST}/api/user/login`, {
-    account: account,
-    userPassword: userPassword
-}, 'POST')
-/**
- * 获取用户信息
- */
-export const getUserInfo = (userid) => fetch(`${USER_HOST}/api/user/center/getUserInfo`, {
-    userId: userid
-}, 'POST')
 /**
  * 专业科目
  */
@@ -83,8 +71,71 @@ export const getCourseComment = (courseid, currentPage, catalogid) => fetch(`${C
     catalogId: catalogid
 }, 'POST')
 /**
+ * 班级首页
+ */
+export const getAllClass = (userid, classname, currentPage) => fetch(`${CLASS_HOST}/api/class/ajax/getClassesList`, {
+    userId: userid,
+    'class.className': classname,
+    'page.currentPage': currentPage
+}, 'POST')
+/**
+ * 班级首页 - 我的
+ */
+export const getMyClass = (userid, currentPage) => fetch(`${CLASS_HOST}/api/uc/class/personal/ajax/list/class`, {
+    userId: userid,
+    'page.currentPage': currentPage
+}, 'POST')
+/**
+ * 班级下话题
+ */
+export const classAllTopic = (classid, currentPage) => fetch(`${CLASS_HOST}/api/class/topic/ajax/list/topic`, {
+    classId: classid,
+    'page.currentPage': currentPage
+}, 'POST')
+/**
+ * 班级下话题的所有评论
+ */
+export const topicAllComment = (classid, topicid, currentPage) => fetch(`${CLASS_HOST}/api/class/topic/ajax/list/reply`, {
+    classId: classid,
+    topicId: topicid,
+    'page.currentPage': currentPage
+}, 'POST')
+export const sendTopicComment = (userid, topicid, targetreplyid, context, classid) => fetch(`${CLASS_HOST}/api/class/topic/ajax/save/reply`, {
+    userId: userid,
+    'topicReply.topicId': topicid,
+    'topicReply.targetReplyId': targetreplyid,
+    'topicReply.context': context,
+    'topicReply.classId': classid
+}, 'POST')
+/**
  * 推广员状态校验
  */
 export const checkAgentState = (userid) => fetch(`${AGENT_HOST}/api/agent/user/checkAgentUser`, {
     userId: userid
 }, 'POST')
+/**
+ * 平台总推广员数量
+ */
+export const checkAgentNumber = () => fetch(`${AGENT_HOST}/api/agent/center/openExtension`, {}, 'POST')
+/**
+ * 推广员主页数据
+ */
+export const getAgentIndData = (userid) => fetch(`${AGENT_HOST}/api/agent/user/index`, {
+    userId: userid
+}, 'POST')
+/**
+ * 推广中心首页课程
+ */
+export const getAgentIndCourse = (coursePage, userid, from) => fetch(`${AGENT_HOST}/api/agent/user/extension`, {
+    'page.currentPage': coursePage,
+    userId: userid,
+    from: from
+}, 'POST')
+/**
+ * 上传文件
+ */
+export const uploadFile = (userid, filepath) => fetch('/res/api/image/appUploadImg', {
+    userId: userid,
+    filePath: filepath
+}, 'POST', 'isUpload')
+

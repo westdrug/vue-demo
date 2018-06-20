@@ -12,20 +12,18 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/': {
-        target: 'https://api.268xue.com',
+        target: '',
         secure: true,                    // 如果是https接口，需要开启配置这个参数
         changeOrigin: true,              // 如果接口跨域，需要开启这个参数配置
         emulateJSON: true,
         pathRewrite: {
-          '^/userApi': '/userApi',
-          '^/courseApi': '/courseApi',
-          '^/opApi': '/opApi'
+
         }
       }
     },
 
     // Various Dev Server settings
-    host: '127.0.0.1', // can be overwritten by process.env.HOST
+    host: '0.0.0.0', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
@@ -60,7 +58,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps

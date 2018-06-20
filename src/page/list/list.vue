@@ -1,9 +1,13 @@
 <template>
     <div>
-        <head-top head-title="选课" goBack="true"></head-top>
+        <head-top head-title="选课"></head-top>
         <div class="main">
             <div class="mainChild-fixed">
-                <filter-top @subjectEvent="subjectEvent"></filter-top>
+                <filter-top
+                    @subjectEvent="subjectEvent"
+                    @cTypeEvent="cTypeEvent"
+                    @cYearEvent="cYearEvent">
+                </filter-top>
                 <course-list
                     :priceOrderBy="priceOrderBy"
                     :updateTimeOrderBy="updateTimeOrderBy"
@@ -45,6 +49,12 @@
         methods: {
             subjectEvent(data) {
             	this.subjectId = data
+            },
+            cTypeEvent(data) {
+                this.courseTypeKey = data
+            },
+            cYearEvent(data) {
+            	this.year = data
             }
         }
     }
@@ -52,9 +62,5 @@
 </script>
 
 <style lang="scss" scoped>
-    .mainChild-fixed {
-        position: relative;
-        margin-top: 2rem;
-        height: calc(100% - 2rem);
-    }
+
 </style>

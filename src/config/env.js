@@ -5,7 +5,7 @@
  */
 
 let baseUrl = '';
-let imgBaseUrl = 'https://res.268xue.com';
+let imgBaseUrl = '';
 let routerMode = 'history';    // 'abstract'、'history'
 
 export {

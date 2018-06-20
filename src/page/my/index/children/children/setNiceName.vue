@@ -1,11 +1,11 @@
 <template>
     <div class="rating_page">
         <head-top head-title="修改姓名" goBack="true">
-            <span slot="edit" @click="saveNiceName">保存</span>
+            <span slot="edit" @click="saveRealName">保存</span>
         </head-top>
         <section class="rating_page__wrap">
             <div class="hLh30"></div>
-            <mt-field label="昵称" placeholder="请输入真实姓名" v-model="niceName"></mt-field>
+            <mt-field label="昵称" placeholder="请输入真实姓名" v-model="realName"></mt-field>
         </section>
     </div>
 </template>
@@ -17,7 +17,7 @@
     export default {
     	data(){
             return{
-                niceName: null
+                realName: null
             }
         },
         components: {
@@ -25,9 +25,14 @@
             Field
         },
         methods: {
-    		async saveNiceName() {
-    			console.log(this.niceName)
-                this.$set(this.$store.state.userInfo.entity, 'realName', 'aaa')
+            ...mapMutations([
+            	'RESET_NAME'
+            ]),
+    		async saveRealName() {
+    			//console.log(this.realName)
+                //console.log(this.$store.state.userInfo)
+                this.RESET_NAME(this.realName)
+                this.$router.go(-1)
             }
         }
     }

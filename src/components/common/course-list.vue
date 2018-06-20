@@ -1,7 +1,7 @@
 <template>
     <div class="courseList_container">
         <ul v-if="courseList.length" v-scroll-load="scrollLoadMore" type="1">
-            <router-link :to="{name: 'courseInfo', params: {courseId: item.id}}" class="course_li" v-for="item in courseList" tag="li" :key="item.id">
+            <router-link :to="{name: 'courseInfo', params: {courseId: item.id}}" class="course_li" v-for="(item, index) in courseList" tag="li" :key="index">
                 <section>
                     <img :alt="item.courseName" class="course_img" v-lazy="item.imageMap.mobileUrlMap.small">
                 </section>
@@ -34,7 +34,7 @@
     import loadData from '@/components/common/load-data'
     import { getAllCourse } from '@/service/getData'
     import { Lazyload } from 'mint-ui'
-    import { scrollLoad } from '@/components/common/mixin'
+    import { scrollLoad, scrollLoadMoreFn } from '@/components/common/mixin'
     export default {
     	data(){
             return{
@@ -59,6 +59,11 @@
         },
         props: ['priceOrderBy','updateTimeOrderBy','courseName','subjectId','year','courseTypeKey'],
         mixins: [scrollLoad],
+        computed: {
+    		listenData() {
+    			return [this.subjectId, this.year, this.courseTypeKey]
+            }
+        },
         methods: {
     		async initData() {
                 await getAllCourse(this.currentPage, this.priceOrderBy, this.updateTimeOrderBy, this.courseName, this.subjectId, this.year, this.courseTypeKey, this.form).then(res => {
@@ -73,34 +78,20 @@
     		},
             async scrollLoadMore() {
 
-    			//防止重复请求
-    			if(this.preventRepeatReuqest) return
-
-                this.preventRepeatReuqest = true
-    			this.hasRefresh = true
-
-                if(this.totalPage === this.currentPage) {
-    				this.hasMore = false
-                    return
-                }
-
-                this.currentPage++
-                if(this.currentPage <= this.totalPage) {
-                    this.hasMore = true
-                    this.initData()
-                } else {
-                    this.hasMore = false
-                    return
-                }
+                scrollLoadMoreFn(this, this.initData)
 
             }
         },
         watch: {
-    		//兼听父组件传来 subjectId，当值发生变化时重新获取课程数据，用于分类筛选
-            subjectId: function (value) {
-                //console.log('id', value)
-                this.courseList.length = 0
-                this.initData()
+            //兼听父组件传来 筛选条件，当值发生变化时重新获取课程数据，用于分类排序筛选
+            listenData: {
+            	handler: function (val) {
+                    this.$nextTick(function () {
+                        this.courseList.length = 0
+                        this.initData()
+                    })
+                },
+                deep: true
             }
         }
     }
