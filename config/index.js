@@ -17,7 +17,6 @@ module.exports = {
         changeOrigin: true,              // 如果接口跨域，需要开启这个参数配置
         emulateJSON: true,
         pathRewrite: {
-
         }
       }
     },

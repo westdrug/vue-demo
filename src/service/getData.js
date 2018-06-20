@@ -31,6 +31,7 @@ export const bannerIndex = () => fetch(`${OP_HOST}/api/advert/ajax/advertList`, 
 export const courseMenu = (courseid) => fetch(`${COURSE_HOST}/api/course/getCourseCatalogByCourseId`, {
     courseId: courseid
 }, 'POST');
+
 /**
  * 专业科目
  */
