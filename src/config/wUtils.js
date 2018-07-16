@@ -150,6 +150,21 @@ export const defaultPictureFn = (num) => {
 }
 
 /**
+ * 时间重置
+ */
+export const timeAgo = function (time) {
+    const between = Date.now() / 1000 - Number(time)
+
+    if (between < 3600) {
+        return `${~~(between / 60)} 分钟前`
+    } else if (between < 86400) {
+        return `${~~(between / 3600)} 小时前`
+    } else {
+        return `${~~(between / 86400)} 天前`
+    }
+}
+
+/**
  * 格式化时间戳
  */
 export const formatTime = function (date, format = '', conn = '-') {
