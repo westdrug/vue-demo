@@ -9,6 +9,24 @@
     <meta name="full-screen" content="yes">
     <meta name="x5-fullscreen" content="true">
     <title>v_demo</title>
+      <script>
+          (function() {
+              var ieInf = navigator.userAgent.match(/msie\s*(\d+)/i);
+              if (!ieInf) ieInf = navigator.userAgent.match(/Trident.+rv:(\d+)/i);
+              if(ieInf) {
+                  if(parseInt(ieInf[1]) >=10) {
+                      console.log('ie>=10');
+                  }else{
+                      console.log('ie<=9');
+                      document.write(
+                          '<div style="background:#FFFCCF;text-align: center;line-height: 30px">'
+                          + '您的浏览器版本太低，功能无法使用。请升级到IE10以上，或使用Chrome、Firefox等现代浏览器~'
+                          + '</div>'
+                      );
+                  }
+              }
+          })()
+      </script>
   </head>
   <body>
     <div id="app">
